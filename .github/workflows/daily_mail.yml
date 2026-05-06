@@ -1,0 +1,25 @@
+name: Crypto Morning Report
+
+on:
+  schedule:
+    - cron: '0 23 * * *' # UTC 23시 = 한국 시간 다음날 오전 8시
+  workflow_dispatch:
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Python Setup
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install
+        run: pip install -r requirements.txt
+      - name: Execute
+        env:
+          CG_API_KEY: ${{ secrets.CG_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_APP_PASS: ${{ secrets.GMAIL_APP_PASS }}
+        run: python main.py
