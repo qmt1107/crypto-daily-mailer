@@ -1,25 +1,30 @@
-name: Crypto Morning Report
+name: Daily CoinGecko Highlights
 
 on:
   schedule:
-    - cron: '0 23 * * *' # UTC 23시 = 한국 시간 다음날 오전 8시
-  workflow_dispatch:
+    # 한국시간 매일 오전 8시 = UTC 23시 (전날)
+    # cron 형식: 분 시 일 월 요일
+    - cron: '0 23 * * *'
+  workflow_dispatch:  # GitHub UI에서 수동 실행 가능
 
 jobs:
-  run-bot:
+  send-email:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Python Setup
-        uses: actions/setup-python@v4
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
         with:
-          python-version: '3.10'
-      - name: Install
+          python-version: '3.13'
+
+      - name: Install dependencies
         run: pip install -r requirements.txt
-      - name: Execute
+
+      - name: Send daily email
         env:
-          CG_API_KEY: ${{ secrets.CG_API_KEY }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GMAIL_USER: ${{ secrets.GMAIL_USER }}
-          GMAIL_APP_PASS: ${{ secrets.GMAIL_APP_PASS }}
-        run: python main.py
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
+        run: python fetch_highlights.py
