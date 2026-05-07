@@ -205,8 +205,8 @@ def build_html(trending, gainers, losers, global_data, today_str):
 <td style="padding:8px;"><div style="font-size:12px;color:#6b7280;">ETH 도미넌스</div><div style="font-size:18px;font-weight:600;color:#111827;">{eth_dom:.1f}%</div></td>
 </tr></table>
 {section("트렌딩", "🔥", trending_rows)}
-{section("상승 Top 5", "📈", gainer_rows)}
-{section("하락 Top 5", "📉", loser_rows)}
+{section("상승 Top 20", "📈", gainer_rows)}
+{section("하락 Top 20", "📉", loser_rows)}
 <p style="margin-top:32px;padding-top:16px;border-top:1px solid #eee;color:#9ca3af;font-size:12px;text-align:center;">Powered by CoinGecko API · 자동 발송 메일</p>
 </td></tr></table></td></tr></table></body></html>"""
 
@@ -257,7 +257,7 @@ def main():
     print(f"  ✓ 마켓 {len(markets)}개")
     global_data = fetch_global()
     print(f"  ✓ 글로벌 통계 수신")
-    gainers, losers = split_gainers_losers(markets, n=5)
+    gainers, losers = split_gainers_losers(markets, n=20)
 
     print("\n[3/4] HTML 메일 본문 생성...")
     today = datetime.now(KST)
